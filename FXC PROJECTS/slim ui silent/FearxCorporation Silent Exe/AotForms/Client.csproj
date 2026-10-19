@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net7.0-windows7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PublishAot>true</PublishAot>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+	<_SuppressWinFormsTrimError>true</_SuppressWinFormsTrimError>
+	<Platforms>AnyCPU;x64</Platforms>
+    <AssemblyName>FearXCorporation</AssemblyName>
+    <Product>Fear X Corporation</Product>
+    <Company>Fear X Corporation</Company>
+    <Copyright>© 2025 Fear X Corporation</Copyright>
+  </PropertyGroup>
+  <ItemGroup>
+	<RdXmlFile Include="rd.xml" />
+  </ItemGroup>
+	    
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="ClickableTransparentOverlay" Version="9.3.0" />
+    <PackageReference Include="DNNE" Version="2.0.6" />
+    <PackageReference Include="Guna.UI2.WinForms" Version="2.0.4.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+    <PackageReference Include="WinFormsComInterop" Version="0.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="clicksound.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="clicksound.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Reborn UI\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Helper">
+      <HintPath>C:\Users\Rahul Raj\Downloads\Helper.dll</HintPath>
+    </Reference>
+    <Reference Include="Memory">
+      <HintPath>C:\Users\Rahul Raj\Downloads\Memory.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
+</Project>

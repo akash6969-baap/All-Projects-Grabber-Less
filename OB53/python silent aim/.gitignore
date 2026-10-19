@@ -1,0 +1,21 @@
+# Build output & standalone distributions
+dist/
+dist_nuitka/
+build/
+*.dist/
+*.build/
+*.zip
+
+# Python caches & logs
+__pycache__/
+*.pyc
+crash_log.txt
+*.log
+
+# C# compilation outputs
+[Bb]in/
+[Oo]bj/
+
+# IDE configurations
+.vscode/
+query

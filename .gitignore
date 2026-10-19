@@ -1,0 +1,85 @@
+# Visual Studio Cache (CRITICAL: Contains 250MB+ .ipch files)
+.vs/
+*/.vs/
+*/*/.vs/
+*/*/*/.vs/
+*.ipch
+*.db
+*.opendb
+
+# Font headers that trigger GitHub warnings (optional font assets)
+Fonts/NotoSc.h
+Fonts/Unifont.h
+Fonts/NotoTc.h
+*/Fonts/NotoSc.h
+*/Fonts/Unifont.h
+*/Fonts/NotoTc.h
+*/*/Fonts/NotoSc.h
+*/*/Fonts/Unifont.h
+*/*/Fonts/NotoTc.h
+
+# Archives & Nuget
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+*.iso
+*.nupkg
+
+# Build Outputs
+bin/
+*/bin/
+*/*/bin/
+*/*/*/bin/
+obj/
+*/obj/
+*/*/obj/
+*/*/*/obj/
+x64/
+*/x64/
+*/*/x64/
+Release/
+*/Release/
+Debug/
+*/Debug/
+dist/
+*/dist/
+dist_nuitka/
+*/dist_nuitka/
+build/
+*/build/
+
+# Next.js & Node
+.next/
+*/.next/
+*/*/.next/
+node_modules/
+*/node_modules/
+*/*/node_modules/
+
+# Python
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*.py[cod]
+
+# Intermediate files
+*.pdb
+*.ilk
+*.tlog
+*.ipdb
+*.iobj
+*.idb
+*.lastbuildstate
+*.lib
+*.obj
+*.sst
+*.tmp
+*.log
+
+# Environment
+.env
+.env.*
+*/.env
+*/*/.env

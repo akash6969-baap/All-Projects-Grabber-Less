@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Environment / secrets
+.env
+*.env
+
+# DLLs (keep dlls/ folder but ignore actual DLL files)
+dlls/*.dll
+
+# Logs
+*.log
+
+# Distribution
+*.exe
+*.msi
+*.spec

@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FEAR MODS STREAMER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #5c85ff;
+      --primary-glow: rgba(92, 133, 255, 0.35);
+      --bg-dark: #000000;
+      --panel-bg: rgba(22, 24, 30, 0.95);
+      --border-color: rgba(255, 255, 255, 0.04);
+      --text-main: #e6edf3;
+      --text-dim: #8b949e;
+      --success: #39d353;
+      --error: #f85149;
+    }
+
+    body.light-theme {
+      --bg-dark: #f0f2f5;
+      --panel-bg: rgba(255, 255, 255, 0.95);
+      --border-color: rgba(0, 0, 0, 0.06);
+      --text-main: #1f2937;
+      --text-dim: #6b7280;
+      --primary-glow: rgba(92, 133, 255, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 30px 20px;
+      overflow-x: hidden;
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 480px; /* Reduced to make layout compact and look like a premium mobile controller */
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── PANELS ── */
+    .panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .panel::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(92, 133, 255, 0.25), transparent);
+      border-radius: 12px 12px 0 0;
+    }
+
+    h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::after {
+      content: '';
+      height: 1px;
+      flex-grow: 1;
+      background: rgba(92, 133, 255, 0.15);
+    }
+
+    /* ── HEADER ── */
+    .header-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .branding h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-main);
+    }
+
+    .branding h1 span.version-tag {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-left: 5px;
+      opacity: 0.8;
+      font-weight: 500;
+    }
+
+    .branding p {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .status-badge {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: rgba(16, 185, 129, 0.05);
+      color: var(--success);
+      padding: 6px 14px;
+      border-radius: 100px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .status-badge.offline {
+      background: rgba(239, 68, 68, 0.05);
+      color: var(--error);
+      border-color: rgba(239, 68, 68, 0.2);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.1);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+      animation: pulseDot 1.5s infinite alternate;
+    }
+
+    @keyframes pulseDot {
+      from { opacity: 0.5; box-shadow: 0 0 4px currentColor; }
+      to { opacity: 1; box-shadow: 0 0 12px currentColor; }
+    }
+
+    #inject-btn {
+      background: linear-gradient(135deg, rgba(92, 133, 255, 0.08), rgba(92, 133, 255, 0.2));
+      border: 1px solid rgba(92, 133, 255, 0.8);
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 8px 20px;
+      border-radius: 100px;
+      box-shadow: 0 0 15px rgba(92, 133, 255, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    #inject-btn:hover:not(:disabled) {
+      background: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 0 20px var(--primary-glow);
+      transform: translateY(-1px);
+    }
+
+    #inject-btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    #inject-btn:disabled {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-dim);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* ── TABS ── */
+    .tab-navigation {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 4px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    /* ── OPTIONS GRID ── */
+    .option-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .option-row:last-child { border-bottom: none; }
+
+    .option-info label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .option-info p {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .action-btn.active {
+      background: var(--primary);
+      color: #0b0c10;
+      border-color: var(--primary);
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .action-btn.solid {
+      background: var(--primary);
+      color: #0b0c10;
+      font-weight: 700;
+      border: none;
+    }
+
+    .action-btn.solid:hover {
+      background: #7a9cff;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    select {
+      background: rgba(20, 22, 29, 0.98);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      outline: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b949e'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+      color-scheme: dark;
+    }
+
+    select option {
+      background: #14161d;
+      color: var(--text-main);
+    }
+
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-glow);
+    }
+
+    /* Range Slider styling */
+    .slider {
+      -webkit-appearance: none;
+      width: 140px;
+      height: 6px;
+      border-radius: 100px;
+      background: #191b22;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      outline: none;
+      transition: background 0.3s;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary-glow);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    /* ── CONSOLE ── */
+    .console-wrapper {
+      padding: 16px;
+      background: #0d0d10;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    .console {
+      height: 120px;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--primary);
+      line-height: 1.6;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) transparent;
+    }
+
+    .console::-webkit-scrollbar { width: 4px; }
+    .console::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+    .log-line {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .log-time { color: var(--text-dim); opacity: 0.6; }
+
+    /* ── TABS LOGIC ── */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: tabFade 0.3s ease-out; }
+    .tab-panel {
+      min-height: 380px; /* Shorter card height to fit content compactly */
+    }
+
+    @keyframes tabFade {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .display-none { display: none; }
+
+    /* ── NOTIFICATIONS ── */
+    #notifications-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .notification {
+      background: #18181b;
+      border-left: 3px solid var(--primary);
+      padding: 14px 20px;
+      border-radius: 4px 8px 8px 4px;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      animation: slideIn 0.3s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .notification.fade-out {
+      animation: slideOut 0.3s ease-in forwards;
+    }
+
+    @keyframes slideOut {
+      to { transform: translateX(100%); opacity: 0; }
+    }
+
+    /* Light Theme Components Override */
+    body.light-theme {
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(92, 133, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(92, 133, 255, 0.01) 0%, transparent 40%);
+    }
+
+    body.light-theme .console-wrapper {
+      background: #f9fafb;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    body.light-theme .console {
+      color: #1e3a8a;
+    }
+
+    body.light-theme .action-btn {
+      background: rgba(0, 0, 0, 0.03);
+      color: #4b5563;
+    }
+
+    body.light-theme .action-btn:hover {
+      background: rgba(0, 0, 0, 0.06);
+      color: #1f2937;
+    }
+
+    body.light-theme .action-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    body.light-theme .action-btn.solid {
+      color: #ffffff;
+    }
+
+    body.light-theme select {
+      background: #ffffff;
+      color: #1f2937;
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-theme .slider {
+      background: #e5e7eb;
+    }
+
+    body.light-theme #inject-btn {
+      color: var(--text-main);
+      background: rgba(92, 133, 255, 0.08);
+      border: 1px solid rgba(92, 133, 255, 0.8);
+    }
+
+    body.light-theme #inject-btn:hover {
+      background: #3b82f6;
+    }
+
+    body.light-theme .status-badge {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    body.light-theme .status-badge.offline {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    /* ── RESPONSIVE MOBILE OPTIMIZATIONS ── */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px 8px;
+      }
+      .panel {
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+      }
+      .panel::after {
+        border-radius: 12px 12px 0 0;
+      }
+      h2 {
+        font-size: 12px;
+        margin-bottom: 12px;
+      }
+      .branding h1 {
+        font-size: 17px;
+      }
+      .tab-btn {
+        padding: 10px 2px;
+        font-size: 11px;
+      }
+      .option-row {
+        padding: 10px 0;
+      }
+      .option-info label {
+        font-size: 12px;
+      }
+      .option-info p {
+        font-size: 10px;
+      }
+      .action-btn {
+        padding: 6px 12px;
+        font-size: 10px;
+      }
+      .slider {
+        width: 100px;
+      }
+      .tab-panel {
+        min-height: 480px; /* Reduced min-height on mobile to fit perfectly without overflow/large black spaces */
+      }
+      .console {
+        height: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Header -->
+    <div class="panel header-panel">
+      <div class="branding">
+        <h1 class="header-title">FEAR MODS STREAMER</h1>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <div class="status-badge" id="server-status">
+          <div class="status-dot"></div>
+          <span>Emulator: Checking</span>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Tab Navigation -->
+    <div class="panel" style="padding: 12px;">
+      <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="headshot">Aimbot</button>
+        <button class="tab-btn" data-tab="sniper">Visuals</button>
+        <button class="tab-btn" data-tab="extra">Extras</button>
+        <button class="tab-btn" data-tab="settings">Config</button>
+      </div>
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="panel tab-panel">
+      <!-- Headshot Tab -->
+      <div class="tab-content active" id="headshot">
+        <h2>Aimbot Configuration</h2>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Aimbot V1</label>
+            <p>Activate target acquisition helper</p>
+          </div>
+          <div class="button-group" id="bg-v1">
+            <button class="action-btn" onclick="activateAimMode('aimbotv1on','v1')">Enable</button>
+            <button class="action-btn active" onclick="sendCommand('aimbotv1off'); deactivateAimMode('v1')">Disable</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>FearCollider</label>
+            <p>Hijack collision to force headshot on every bullet</p>
+          </div>
+          <div class="button-group" id="bg-fc">
+            <button class="action-btn" onclick="activateAimMode('fearcollideron','fc')">Enable</button>
+            <button class="action-btn active" onclick="sendCommand('fearcollideroff'); deactivateAimMode('fc')">Disable</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Ignore Knocked</label>
+            <p>Bypass inactive targets</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('ignoreknockon')">Enable</button>
+            <button class="action-btn active" onclick="sendCommand('ignoreknockoff')">Disable</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Draw FOV Circle</label>
+            <p>Render aimbot boundary circle</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('aimfovcircleon')">Enable</button>
+            <button class="action-btn active" onclick="sendCommand('aimfovcircleoff')">Disable</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Range FOV</label>
+            <p>Resize aimbot boundary: <span id="fov-val">100</span>px</p>
+          </div>
+          <input type="range" min="30" max="600" value="100" class="slider" oninput="sendSliderValue('update_aimfovcircle', this.value); document.getElementById('fov-val').textContent=this.value;">
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Aim Distance</label>
+            <p>Target lock range: <span id="dist-val">200</span>m</p>
+          </div>
+          <input type="range" min="50" max="1000" value="200" class="slider" oninput="sendSliderValue('update_aipower', this.value); document.getElementById('dist-val').textContent=this.value;">
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Force Reload Engine</label>
+            <p>Re-initialize connection with emulator</p>
+          </div>
+          <button class="action-btn solid" onclick="sendCommand('reload')">Reinitialize</button>
+        </div>
+      </div>
+
+      <!-- ESP Tab (Replaces Sniper) -->
+      <div class="tab-content" id="sniper">
+        <h2>Visuals</h2>
+        <div class="option-row">
+          <div class="option-info">
+            <label>ESP Line</label>
+            <p>Draw tracers from center to targets</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('esplineon')">On</button>
+            <button class="action-btn active" onclick="sendCommand('esplineoff')">Off</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>ESP Box</label>
+            <p>Draw boundary box around players</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('espboxon')">On</button>
+            <button class="action-btn active" onclick="sendCommand('espboxoff')">Off</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>ESP Fill Box</label>
+            <p>Solid fill overlay on enemy boxes</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('espfillboxon')">On</button>
+            <button class="action-btn active" onclick="sendCommand('espfillboxoff')">Off</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>ESP Config</label>
+            <p>Draw Name, Distance and HP metrics</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('espconfigon')">On</button>
+            <button class="action-btn active" onclick="sendCommand('espconfigoff')">Off</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>ESP Skeleton</label>
+            <p>Draw dynamic skeleton bone structure</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('espskeletonon')">On</button>
+            <button class="action-btn active" onclick="sendCommand('espskeletonoff')">Off</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>ESP Mini-Map</label>
+            <p>Render radar display overlay</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('minimapon')">On</button>
+            <button class="action-btn active" onclick="sendCommand('minimapoff')">Off</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>ESP Fix</label>
+            <p>Clean and rebuild active entity cache</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('espfixon')">On</button>
+            <button class="action-btn active" onclick="sendCommand('espfixoff')">Off</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extra Tab (Visuals & Movement) -->
+      <div class="tab-content" id="extra">
+        <h2>Extra Operations</h2>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Zero Recoil</label>
+            <p>Disable weapon fire recoil pattern</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('norecoilon')">On</button>
+            <button class="action-btn active" onclick="sendCommand('norecoiloff')">Off</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Streamer Mode</label>
+            <p>Hide ESP visuals during screen sharing</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn active" onclick="sendCommand('streammodon')">On</button>
+            <button class="action-btn" onclick="sendCommand('streammodoff')">Off</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Mute Audio Cues</label>
+            <p>Disable connection success audio playbacks</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('mutesoundoff')">Mute</button>
+            <button class="action-btn active" onclick="sendCommand('mutesoundon')">Unmute</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Overlay Window Taskbar</label>
+            <p>Show/Hide overlay GUI from Windows Taskbar</p>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="sendCommand('showtaskbar')">Show</button>
+            <button class="action-btn active" onclick="sendCommand('hidetaskbar')">Hide</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div class="tab-content" id="settings">
+        <h2>App Configuration</h2>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Visual Protocol</label>
+            <p>Change dashboard theme style</p>
+          </div>
+          <select id="theme-selector">
+            <option value="dark" selected>Steel Blue (Default)</option>
+            <option value="light">High Visibility Light</option>
+          </select>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Connection Engine</label>
+            <p>Initialize security handshake with emulator</p>
+          </div>
+          <button id="inject-btn" onclick="triggerInjection()">Connect Server</button>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Core Updates</label>
+            <p id="update-status-text">Checking for system updates...</p>
+          </div>
+          <button id="update-btn" class="action-btn solid" onclick="triggerUpdate()" style="display: none;">Update Modules</button>
+        </div>
+        <div class="option-row">
+          <div class="option-info">
+            <label>Hotkey Mapping</label>
+            <p>External macros not available in web mode</p>
+          </div>
+          <span style="font-size: 11px; color: var(--text-dim);">Disabled</span>
+        </div>
+        <div class="option-row" style="border-top: 1px solid rgba(248,81,73,0.25); margin-top: 8px; padding-top: 16px;">
+          <div class="option-info">
+            <label style="color: #f85149;">⚠ Terminate Overlay</label>
+            <p style="color: rgba(248,81,73,0.7);">Forcefully kills the overlay process. Use only if overlay is stuck on screen.</p>
+          </div>
+          <button id="kill-overlay-btn" class="action-btn solid" onclick="killOverlay()" style="background: rgba(248,81,73,0.15); border: 1px solid rgba(248,81,73,0.5); color: #f85149;">Kill Overlay</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Console -->
+    <div class="panel">
+      <h2>System Output</h2>
+      <div class="console-wrapper">
+        <div class="console" id="console-logs"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notifications-container"></div>
+
+  <script>
+    const consoleLogs = document.getElementById('console-logs');
+    const notifyContainer = document.getElementById('notifications-container');
+
+    function log(msg) {
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      const time = new Date().toLocaleTimeString([], { hour12: false });
+      line.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-msg">${msg}</span>`;
+      consoleLogs.appendChild(line);
+      consoleLogs.scrollTop = consoleLogs.scrollHeight;
+    }
+
+    function notify(msg) {
+      const item = document.createElement('div');
+      item.className = 'notification';
+      item.textContent = msg;
+      notifyContainer.appendChild(item);
+      setTimeout(() => {
+        item.classList.add('fade-out');
+        item.addEventListener('animationend', () => item.remove());
+      }, 3000);
+    }
+
+    // Tab Switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelector('.tab-btn.active').classList.remove('active');
+        document.querySelector('.tab-content.active').classList.remove('active');
+        
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+        log(`Switched to ${btn.textContent} module`);
+      });
+    });
+
+
+
+    // Generic Button Group Active States
+    document.querySelectorAll('.button-group').forEach(group => {
+      group.addEventListener('click', (e) => {
+        if (e.target.classList.contains('action-btn') && !e.target.classList.contains('solid')) {
+          group.querySelectorAll('.action-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+        }
+      });
+    });
+
+    // Backend Execution
+    window.sendCommand = async function(cmd) {
+      const featureMap = {
+        'aimbotscan': 'Aimbot Scanner',
+        'aimbotenable': 'Target Lock',
+        'aimbotdisable': 'Default Lock',
+        'loadsniper': 'Sniper Signatures',
+        'sniperscopeenable': 'Auto Zoom',
+        'sniperscopedisable': 'Auto Zoom OFF',
+        'sniperswitchenable': 'Fast Switch ON',
+        'sniperswitchdisable': 'Fast Switch OFF',
+        'loadspeed': 'Velocity Loader',
+        'speedon': 'Velocity Hack',
+        'speedoff': 'Velocity OFF',
+        'loadwall': 'X-Ray Loader',
+        'wallon': 'X-Ray Vision',
+        'walloff': 'X-Ray OFF',
+        'loadreload': 'Reload Mod Loader',
+        'reloadon': 'Instant Reload',
+        'reloadoff': 'Reload OFF',
+        'loadrecoil': 'Recoil Sig Loader',
+        'recoilon': 'Zero Recoil',
+        'recoiloff': 'Recoil OFF'
+      };
+
+      const name = featureMap[cmd] || cmd;
+      log(`Executing: ${name}...`);
+
+      try {
+        const res = await fetch('/execute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command: cmd })
+        });
+        const data = await res.json();
+        log(`System: ${data.message}`);
+        notify(`${name} Updated`);
+      } catch (err) {
+        log(`Error: Failed to reach backend`);
+        notify(`Execution Failed`);
+      }
+    };
+
+    // ── AIMBOT MUTEX: sirf ek hi ek waqt active ho sakta ──
+    const AIM_GROUPS = { v1: 'bg-v1', fc: 'bg-fc' };
+
+    function setGroupState(groupId, enabled) {
+      const grp = document.getElementById(groupId);
+      if (!grp) return;
+      const btns = grp.querySelectorAll('.action-btn');
+      btns[0].classList.toggle('active', enabled);
+      btns[1].classList.toggle('active', !enabled);
+    }
+
+    window.activateAimMode = function(cmd, activeKey) {
+      Object.entries(AIM_GROUPS).forEach(([key, gId]) => {
+        if (key !== activeKey) {
+          setGroupState(gId, false);
+        }
+      });
+      setGroupState(AIM_GROUPS[activeKey], true);
+      sendCommand(cmd);
+    };
+
+    window.deactivateAimMode = function(key) {
+      setGroupState(AIM_GROUPS[key], false);
+    };
+
+    // Send Slider / Dropdown Value updates directly
+    window.sendSliderValue = async function(cmd, val) {
+      try {
+        const payloadVal = (isNaN(val) || typeof val === 'string' && isNaN(Number(val))) ? val : parseInt(val);
+        const res = await fetch('/execute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command: cmd, value: payloadVal })
+        });
+        const data = await res.json();
+        log(`System: ${data.message}`);
+      } catch (err) {
+        log(`Error: Failed to send slider update`);
+      }
+    };
+
+    // Status Checker
+    async function checkStatus() {
+      try {
+        const res = await fetch('/status');
+        const data = await res.json();
+        const badge = document.getElementById('server-status');
+        if (data.status === 'online') {
+          badge.classList.remove('offline');
+          badge.querySelector('span').textContent = 'Emulator: Online';
+        } else {
+          badge.classList.add('offline');
+          badge.querySelector('span').textContent = 'Emulator: Offline';
+        }
+      } catch(e) {}
+    }
+
+    // NEW: Injector actions
+    let logsTimer = null;
+
+    window.triggerInjection = async function() {
+      const injectBtn = document.getElementById('inject-btn');
+      injectBtn.disabled = true;
+      injectBtn.textContent = "Connecting...";
+      log("Initializing DLL injection routine...");
+      
+      try {
+        const res = await fetch('/action/inject', { method: 'POST' });
+        const data = await res.json();
+        
+        // Start polling injection logs
+        if (logsTimer) clearInterval(logsTimer);
+        let readIdx = 0;
+        
+        logsTimer = setInterval(async () => {
+          try {
+            const lRes = await fetch('/action/inject_logs');
+            const lData = await lRes.json();
+            const logs = lData.logs || [];
+            
+            while (readIdx < logs.length) {
+              const msg = logs[readIdx];
+              log(msg);
+              notify(msg);
+              
+              if (msg.includes("ONLINE!") || msg.includes("Error:") || msg.includes("failed!")) {
+                clearInterval(logsTimer);
+                injectBtn.disabled = false;
+                injectBtn.textContent = "Connect Server";
+              }
+              readIdx++;
+            }
+          } catch (err) {}
+        }, 800);
+        
+      } catch (err) {
+        log("Error initiating injection client.");
+        injectBtn.disabled = false;
+        injectBtn.textContent = "Connect Server";
+      }
+    };
+
+    // NEW: System Updates actions
+    async function checkSystemUpdates() {
+      const statusText = document.getElementById('update-status-text');
+      const updateBtn = document.getElementById('update-btn');
+      
+      try {
+        const res = await fetch('/status/update');
+        const data = await res.json();
+        
+        if (data.update_available) {
+          statusText.textContent = "New update is available on server.";
+          statusText.style.color = "var(--primary)";
+          updateBtn.style.display = "inline-block";
+        } else {
+          statusText.textContent = "All systems are up-to-date.";
+          statusText.style.color = "var(--success)";
+          updateBtn.style.display = "none";
+        }
+      } catch(e) {
+        statusText.textContent = "Unable to check updates (Offline).";
+        statusText.style.color = "var(--text-dim)";
+      }
+    }
+
+    window.triggerUpdate = async function() {
+      const updateBtn = document.getElementById('update-btn');
+      const statusText = document.getElementById('update-status-text');
+      updateBtn.disabled = true;
+      updateBtn.textContent = "Updating...";
+      log("Downloading dynamic modules...");
+      
+      try {
+        const res = await fetch('/action/update', { method: 'POST' });
+        const data = await res.json();
+        log(data.message);
+        notify(data.message);
+        checkSystemUpdates();
+      } catch (err) {
+        log("Error updating modules.");
+      } finally {
+        updateBtn.disabled = false;
+        updateBtn.textContent = "Update Modules";
+      }
+    };
+
+    // Terminate Overlay Process
+    window.killOverlay = async function() {
+      const confirmed = confirm("⚠ WARNING: This will forcefully terminate the overlay process.\n\nOnly use this if the overlay is stuck on screen.\n\nProceed?");
+      if (!confirmed) return;
+
+      const btn = document.getElementById('kill-overlay-btn');
+      btn.disabled = true;
+      btn.textContent = "Terminating...";
+      log("⚠ Sending overlay termination signal...");
+
+      try {
+        const res = await fetch('/execute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command: 'environment.exit', value: 0 })
+        });
+        const data = await res.json();
+        log("System: Overlay termination signal sent.");
+        notify("Overlay process terminated.");
+      } catch (err) {
+        log("Error: Failed to send termination signal.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Kill Overlay";
+      }
+    };
+
+    // NEW: Restore Feature States on Refresh
+    async function restoreStates() {
+      try {
+        const res = await fetch('/action/get_states');
+        const states = await res.json();
+        
+        for (const [feature, state] of Object.entries(states)) {
+          if (feature.endsWith('_val')) continue;
+          
+          const btnOn = document.querySelector(`[onclick="sendCommand('${feature}on')"]`);
+          const btnOff = document.querySelector(`[onclick="sendCommand('${feature}off')"]`);
+          
+          if (btnOn && btnOff) {
+            if (state === 'on') {
+              btnOn.classList.add('active');
+              btnOff.classList.remove('active');
+            } else {
+              btnOn.classList.remove('active');
+              btnOff.classList.add('active');
+            }
+          }
+        }
+        
+        // Restore sliders
+        if (states.aimfovcircle_val !== undefined) {
+          const slider = document.querySelector(`[oninput*="update_aimfovcircle"]`);
+          if (slider) {
+            slider.value = states.aimfovcircle_val;
+            document.getElementById('fov-val').textContent = states.aimfovcircle_val;
+          }
+        }
+        if (states.aipower_val !== undefined) {
+          const slider = document.querySelector(`[oninput*="update_aipower"]`);
+          if (slider) {
+            slider.value = states.aipower_val;
+            document.getElementById('dist-val').textContent = states.aipower_val;
+          }
+        }
+      } catch (err) {
+        console.error("Error restoring feature states", err);
+      }
+    }
+
+    // Initialize on Load
+    document.addEventListener('DOMContentLoaded', () => {
+      checkStatus();
+      setInterval(checkStatus, 3000);
+      
+      checkSystemUpdates();
+      setInterval(checkSystemUpdates, 30000);
+
+      // Restore button and slider states from backend cache
+      restoreStates();
+
+      // Theme Selector Handler
+      const themeSelector = document.getElementById('theme-selector');
+      themeSelector.addEventListener('change', (e) => {
+        if (e.target.value === 'light') {
+          document.body.classList.add('light-theme');
+          log('Switched style protocol to High Visibility Light Theme');
+        } else {
+          document.body.classList.remove('light-theme');
+          log('Switched style protocol to Steel Blue Theme');
+        }
+      });
+      
+      log('FEAR MODS Streamer Engine Active');
+    });
+  </script>
+</body>
+</html>

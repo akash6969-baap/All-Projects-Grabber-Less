@@ -1,0 +1,10 @@
+flask
+psutil
+pymem
+keyboard
+requests
+qrcode
+pynacl
+pywin32
+pyinstaller
+cffi

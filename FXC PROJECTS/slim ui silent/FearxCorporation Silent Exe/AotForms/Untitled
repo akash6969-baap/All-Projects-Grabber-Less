@@ -1,0 +1,17 @@
+    if (Config.ESPRainbow)
+    {
+        // Use rainbow color when ESP Rainbow is enabled
+        Vector4 rainbowColor = GetRainbowColor(0.5f); // Speed of color change
+        lineColor = ImGui.ColorConvertFloat4ToU32(rainbowColor);
+    }
+    else
+    {
+        // Use normal color
+        lineColor = entity.IsKnocked ? ColorToUint32(Color.Red) : ImGui.ColorConvertFloat4ToU32(ESPCOLOR);
+    }
+    DrawGlowLine(new Vector2(Core.Width / 2f, 25f), headScreenPos, lineColor, Config.EspLineThickNess, Config.GlowRadius, Config.FeatherAmount);
+    
+    // Circle color also changes with rainbow
+    uint circleColor = Config.ESPRainbow ? ImGui.ColorConvertFloat4ToU32(GetRainbowColor(0.5f)) : ColorToUint32(Color.Red);
+    DrawGlowCircle(new Vector2(Core.Width / 2f, 25f), Config.dotRadius, circleColor, Config.EspLineThickNess, Config.GlowRadiusdot, Config.FeatherAmount);
+}

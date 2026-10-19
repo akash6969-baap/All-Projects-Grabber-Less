@@ -1,0 +1,12 @@
+{
+  "aimbot_enabled": true,
+  "aimbot_type": "Silent Aim",
+  "aimbot_distance": 50,
+  "fov_enabled": false,
+  "fov_slider": 75,
+  "aimlock": false,
+  "telikill": false,
+  "updown": false,
+  "updown_value": 0,
+  "cam_right": false
+}
